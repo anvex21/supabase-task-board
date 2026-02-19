@@ -75,11 +75,11 @@ export const Auth = () => {
   return (
     <div className="auth-shell">
       <div>
-        <h2 className="section-title">{isSignUp ? "Create account" : "Welcome back"}</h2>
+        <h2 className="section-title">{isSignUp ? "Create account" : "Welcome!"}</h2>
         <p className="section-subtitle">
           {isSignUp
             ? "Use email/password to create your account."
-            : "Sign in with Google or your email/password."}
+            : "Sign in with Google:"}
         </p>
       </div>
 

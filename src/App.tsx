@@ -38,7 +38,7 @@ function App() {
         <section className="surface-card">
           <header className="app-header">
             <div>
-              <p className="app-eyebrow">Supabase Course</p>
+              <p className="app-eyebrow">Alkin Vezhdi</p>
               <h1 className="app-title">Task Board</h1>
             </div>
             {session && (
