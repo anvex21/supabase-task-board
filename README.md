@@ -1,65 +1,49 @@
-# Supabase Task Board (React + Vite) 🚀
+# Supabase Task Board 🚀
 
-A modern, responsive task manager built with React and Supabase.
+Modern task board built with **React + TypeScript + Supabase**.
+Ship tasks faster with realtime sync, auth, and clean UX. ✨
 
-This project includes:
-- Email/password authentication
-- Google OAuth login
-- Realtime task updates
-- Image uploads with Supabase Storage
-- CRUD operations for tasks
+## What it does 🎯
 
-## Features ✨
-
-- Authentication 🔐
-- Email/password sign up and sign in
-- Google OAuth sign in
-- Sign-up feedback for:
-  - confirmation email sent
-  - account already exists
-
-- Task management ✅
-- Create tasks with title and description
-- Update task descriptions
-- Delete tasks
-- Realtime sync across clients with Supabase Realtime
-
-- Media 🖼️
-- Optional image upload per task
-- Public image URL rendering from Supabase Storage
-
-- UI/UX 🎨
-- Responsive layout (mobile + desktop)
-- Modern card-based interface and form controls
+- 🔐 Email/password auth
+- 🔵 Google OAuth login
+- ✅ Create, update, delete tasks
+- ⚡ Realtime task updates
+- 🖼️ Optional task image uploads
+- 📱 Responsive, modern UI
 
 ## Tech Stack 🧱
 
-- React 19 + TypeScript
+- React 19
+- TypeScript
 - Vite
-- Supabase JS (`@supabase/supabase-js`)
-- ESLint
+- Supabase (`@supabase/supabase-js`)
 
-## Prerequisites 📋
+## Quick Start ⚡
 
-- Node.js 18+
-- npm 9+
-- A Supabase project
-- Google OAuth provider configured in Supabase (optional but enabled in this app)
+```bash
+npm install
+cp .env.example .env
+npm run dev
+```
 
-## Supabase Setup ⚙️
+Set these in `.env` 🔑:
 
-1. Create a new Supabase project.
-2. In `Authentication -> URL Configuration`:
-- Set `Site URL` to your app URL (for local dev use `http://localhost:5173`).
-- Add `http://localhost:5173` under `Additional Redirect URLs`.
+```env
+VITE_SUPABASE_URL="https://YOUR_PROJECT_REF.supabase.co"
+VITE_SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY"
+```
 
-3. In `Authentication -> Providers -> Google`:
-- Enable Google provider.
-- Add Google `Client ID` and `Client Secret`.
-- In Google Cloud Console, add Supabase callback URL:
-  - `https://<your-project-ref>.supabase.co/auth/v1/callback`
+## Supabase Setup 🛠️
 
-4. Create a `tasks` table in Supabase Postgres. Example SQL:
+1. Create a Supabase project
+2. Auth URL config:
+- `Site URL`: `http://localhost:5173`
+- Add `http://localhost:5173` to `Additional Redirect URLs`
+3. Enable Google provider in `Authentication -> Providers` and add Google Client ID/Secret.
+4. In Google Cloud Console, add callback URI:
+- `https://<your-project-ref>.supabase.co/auth/v1/callback`
+5. Create table 🗃️:
 
 ```sql
 create table if not exists public.tasks (
@@ -68,62 +52,28 @@ create table if not exists public.tasks (
   description text not null,
   image_url text,
   email text,
-  created_at text not null default now()
+  created_at timestamptz not null default now()
 );
 ```
 
-5. Create a Storage bucket named `tasks-images`.
+6. Create Storage bucket `tasks-images` 📦
+7. Enable Realtime for `public.tasks` ⚡
 
-6. Enable Realtime on `public.tasks` (Table Editor -> tasks -> Realtime).
-
-7. Configure RLS/policies as needed for your security model.
-
-## Environment Variables 🔑
-
-Copy `.env.example` to `.env` and fill values:
-
-```bash
-cp .env.example .env
-```
-
-Required variables:
-
-```env
-VITE_SUPABASE_URL="https://YOUR_PROJECT_REF.supabase.co"
-VITE_SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY"
-```
-
-## Local Setup 💻
-
-Install dependencies:
-
-```bash
-npm install
-```
-
-Start development server:
+## Scripts 💻
 
 ```bash
 npm run dev
-```
-
-Build for production:
-
-```bash
-npm run build
-```
-
-Lint:
-
-```bash
 npm run lint
-```
-
-Preview production build locally:
-
-```bash
+npm run build
 npm run preview
 ```
+
+## Prerequisites 📋
+
+- Node.js 18+
+- npm 9+
+- A Supabase project
+- Google OAuth credentials (Client ID and Client Secret)
 
 ## Project Structure 🗂️
 
@@ -138,5 +88,5 @@ src/
 
 ## Notes 📝
 
-- If sign-up says account already exists, use Sign In instead.
-- Email/password sign-up requires email confirmation depending on Supabase Auth settings.
+- If sign-up says the account already exists, use **Sign in** instead.
+- Email/password sign-up may require email confirmation based on your Supabase Auth settings.
