@@ -1,4 +1,4 @@
-# Supabase Task Board (React + Vite)
+# Supabase Task Board (React + Vite) 🚀
 
 A modern, responsive task manager built with React and Supabase.
 
@@ -9,44 +9,44 @@ This project includes:
 - Image uploads with Supabase Storage
 - CRUD operations for tasks
 
-## Features
+## Features ✨
 
-- Authentication
+- Authentication 🔐
 - Email/password sign up and sign in
 - Google OAuth sign in
 - Sign-up feedback for:
   - confirmation email sent
   - account already exists
 
-- Task management
+- Task management ✅
 - Create tasks with title and description
 - Update task descriptions
 - Delete tasks
 - Realtime sync across clients with Supabase Realtime
 
-- Media
+- Media 🖼️
 - Optional image upload per task
 - Public image URL rendering from Supabase Storage
 
-- UI/UX
+- UI/UX 🎨
 - Responsive layout (mobile + desktop)
 - Modern card-based interface and form controls
 
-## Tech Stack
+## Tech Stack 🧱
 
 - React 19 + TypeScript
 - Vite
 - Supabase JS (`@supabase/supabase-js`)
 - ESLint
 
-## Prerequisites
+## Prerequisites 📋
 
 - Node.js 18+
 - npm 9+
 - A Supabase project
 - Google OAuth provider configured in Supabase (optional but enabled in this app)
 
-## Supabase Setup
+## Supabase Setup ⚙️
 
 1. Create a new Supabase project.
 2. In `Authentication -> URL Configuration`:
@@ -78,7 +78,7 @@ create table if not exists public.tasks (
 
 7. Configure RLS/policies as needed for your security model.
 
-## Environment Variables
+## Environment Variables 🔑
 
 Copy `.env.example` to `.env` and fill values:
 
@@ -93,7 +93,7 @@ VITE_SUPABASE_URL="https://YOUR_PROJECT_REF.supabase.co"
 VITE_SUPABASE_ANON_KEY="YOUR_SUPABASE_ANON_KEY"
 ```
 
-## Local Setup
+## Local Setup 💻
 
 Install dependencies:
 
@@ -125,7 +125,7 @@ Preview production build locally:
 npm run preview
 ```
 
-## Project Structure
+## Project Structure 🗂️
 
 ```text
 src/
@@ -136,7 +136,7 @@ src/
     task-manager.tsx
 ```
 
-## Notes
+## Notes 📝
 
 - If sign-up says account already exists, use Sign In instead.
 - Email/password sign-up requires email confirmation depending on Supabase Auth settings.
