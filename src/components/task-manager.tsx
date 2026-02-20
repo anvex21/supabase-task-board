@@ -2,6 +2,7 @@ import "../App.css";
 import {
   startTransition,
   useEffect,
+  useRef,
   useState,
   type ChangeEvent,
   type SubmitEvent,
@@ -21,6 +22,7 @@ export default function TaskManager({ session }: { session: Session }) {
   const [newTask, setNewTask] = useState({ title: "", description: "" });
   const [tasks, setTasks] = useState<Task[]>([]);
   const [taskImage, setTaskImage] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [editDescriptionById, setEditDescriptionById] = useState<
     Record<number, string>
   >({});
@@ -126,17 +128,20 @@ export default function TaskManager({ session }: { session: Session }) {
       console.error("Error uploading image:", error);
       return null;
     }
-    const { data } = supabase.storage.from("tasks-images").getPublicUrl(filePath);
+    const { data } = supabase.storage
+      .from("tasks-images")
+      .getPublicUrl(filePath);
     return data.publicUrl;
   };
 
   const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    let imageUrl: string | null = null;
-    if (taskImage) {
-      imageUrl = await uploadImage(taskImage);
+    if (!taskImage) {
+      return;
     }
+
+    const imageUrl = await uploadImage(taskImage);
 
     const { data, error } = await supabase
       .from("tasks")
@@ -155,6 +160,9 @@ export default function TaskManager({ session }: { session: Session }) {
 
     setNewTask({ title: "", description: "" });
     setTaskImage(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
 
   const deleteTask = async (id: number) => {
@@ -187,7 +195,9 @@ export default function TaskManager({ session }: { session: Session }) {
     <div className="tasks-shell">
       <section className="surface-subcard">
         <h2 className="section-title">Create task</h2>
-        <p className="section-subtitle">Add title, description, and optionally an image.</p>
+        <p className="section-subtitle">
+          Add title, description, and an image.
+        </p>
 
         <form onSubmit={handleSubmit} className="task-form">
           <label className="field-label" htmlFor="task-title">
@@ -228,7 +238,10 @@ export default function TaskManager({ session }: { session: Session }) {
             accept="image/*"
             onChange={handleFileChange}
             className="file-input"
+            ref={fileInputRef}
+            required
           />
+          <p className="field-help">All formats supported, up to 10MB.</p>
 
           <button type="submit" className="btn btn-primary">
             Add task
@@ -241,7 +254,9 @@ export default function TaskManager({ session }: { session: Session }) {
         <p className="section-subtitle">Realtime updates are enabled.</p>
 
         {tasks.length === 0 ? (
-          <p className="empty-state">No tasks yet. Create your first one above.</p>
+          <p className="empty-state">
+            No tasks yet. Create your first one above.
+          </p>
         ) : (
           <ul className="tasks-list">
             {tasks.map((task) => (
