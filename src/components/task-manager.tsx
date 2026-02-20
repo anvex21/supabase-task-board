@@ -172,6 +172,29 @@ export default function TaskManager({ session }: { session: Session }) {
     }
   };
 
+  const exportToCSV = () => {
+    const headers = ["Title", "Description", "Created At"];
+    const rows = tasks.map((task) => [
+      `"${task.title.replace(/"/g, '""')}"`,
+      `"${task.description.replace(/"/g, '""')}"`,
+      new Date(task.created_at).toLocaleString(),
+    ]);
+
+    const csv = [headers.join(","), ...rows.map((row) => row.join(","))].join(
+      "\n"
+    );
+
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `tasks_${new Date().toISOString().split("T")[0]}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  };
+
   const updateTask = async (id: number) => {
     const description = editDescriptionById[id]?.trim();
     if (!description) {
@@ -250,8 +273,21 @@ export default function TaskManager({ session }: { session: Session }) {
       </section>
 
       <section className="surface-subcard">
-        <h2 className="section-title">Tasks</h2>
-        <p className="section-subtitle">Realtime updates are enabled.</p>
+        <div className="tasks-header">
+          <div>
+            <h2 className="section-title">Tasks</h2>
+            <p className="section-subtitle">Realtime updates are enabled.</p>
+          </div>
+          {tasks.length > 0 && (
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={exportToCSV}
+            >
+              Export CSV
+            </button>
+          )}
+        </div>
 
         {tasks.length === 0 ? (
           <p className="empty-state">

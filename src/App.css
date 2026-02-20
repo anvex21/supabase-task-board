@@ -248,6 +248,13 @@
   gap: 1rem;
 }
 
+.tasks-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
 .tasks-list {
   margin: 0;
   margin-top: 0.9rem;
@@ -335,6 +342,15 @@
 
   .task-date {
     white-space: normal;
+  }
+
+  .tasks-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .tasks-header button {
+    width: 100%;
   }
 }
 
