@@ -16,6 +16,7 @@ interface Task {
   description: string;
   created_at: string;
   image_url: string;
+  email: string | null;
 }
 
 export default function TaskManager({ session }: { session: Session }) {
@@ -24,6 +25,9 @@ export default function TaskManager({ session }: { session: Session }) {
   const [taskImage, setTaskImage] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [editDescriptionById, setEditDescriptionById] = useState<
+    Record<number, string>
+  >({});
+  const [actionErrorById, setActionErrorById] = useState<
     Record<number, string>
   >({});
 
@@ -166,10 +170,31 @@ export default function TaskManager({ session }: { session: Session }) {
   };
 
   const deleteTask = async (id: number) => {
+    const task = tasks.find((item) => item.id === id);
+    const userEmail = session.user.email ?? "";
+    if (task?.email && task.email !== userEmail) {
+      setActionErrorById((prev) => ({
+        ...prev,
+        [id]: "Only the task owner can delete this task.",
+      }));
+      return;
+    }
+
     const { error } = await supabase.from("tasks").delete().eq("id", id);
     if (error) {
       console.error("Error deleting task:", error);
+      setActionErrorById((prev) => ({
+        ...prev,
+        [id]: "You are not allowed to delete this task.",
+      }));
+      return;
     }
+
+    setActionErrorById((prev) => {
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
   };
 
   const exportToCSV = () => {
@@ -181,7 +206,7 @@ export default function TaskManager({ session }: { session: Session }) {
     ]);
 
     const csv = [headers.join(","), ...rows.map((row) => row.join(","))].join(
-      "\n"
+      "\n",
     );
 
     const blob = new Blob([csv], { type: "text/csv" });
@@ -201,6 +226,16 @@ export default function TaskManager({ session }: { session: Session }) {
       return;
     }
 
+    const task = tasks.find((item) => item.id === id);
+    const userEmail = session.user.email ?? "";
+    if (task?.email && task.email !== userEmail) {
+      setActionErrorById((prev) => ({
+        ...prev,
+        [id]: "Only the task owner can update this task.",
+      }));
+      return;
+    }
+
     const { error } = await supabase
       .from("tasks")
       .update({ description })
@@ -208,10 +243,19 @@ export default function TaskManager({ session }: { session: Session }) {
 
     if (error) {
       console.error("Error updating task:", error);
+      setActionErrorById((prev) => ({
+        ...prev,
+        [id]: "You are not allowed to update this task.",
+      }));
       return;
     }
 
     setEditDescriptionById((prev) => ({ ...prev, [id]: "" }));
+    setActionErrorById((prev) => {
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
   };
 
   return (
@@ -298,7 +342,12 @@ export default function TaskManager({ session }: { session: Session }) {
             {tasks.map((task) => (
               <li key={task.id} className="task-card">
                 <div className="task-top">
-                  <h3 className="task-title">{task.title}</h3>
+                  <div className="task-title-group">
+                    <h3 className="task-title">{task.title}</h3>
+                    <p className="task-email">
+                      {task.email ? `by ${task.email}` : "by unknown"}
+                    </p>
+                  </div>
                   <p className="task-date">
                     {new Date(task.created_at).toLocaleString(undefined, {
                       dateStyle: "medium",
@@ -349,6 +398,9 @@ export default function TaskManager({ session }: { session: Session }) {
                       Delete
                     </button>
                   </div>
+                  {actionErrorById[task.id] && (
+                    <p className="error-text">{actionErrorById[task.id]}</p>
+                  )}
                 </div>
               </li>
             ))}

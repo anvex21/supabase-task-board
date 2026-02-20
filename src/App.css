@@ -283,6 +283,17 @@
   font-size: 1.02rem;
 }
 
+.task-title-group {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.task-email {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
 .task-date {
   margin: 0;
   font-size: 0.8rem;
